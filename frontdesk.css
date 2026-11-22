@@ -1,0 +1,28 @@
+:root{color-scheme:light;font-family:system-ui,sans-serif;color:#17233b;background:#eef2f8;--line:#dce4ef;--muted:#536279;--accent:#1745b6}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0}
+.mast{display:flex;align-items:center;gap:16px;padding:14px max(24px,calc((100% - 1220px)/2));background:#11234a;color:#fff;min-height:64px}
+.mast strong{font-size:1.3rem}.mast span{color:#cad7f2}.mast button{margin-left:auto;white-space:nowrap}
+main{max-width:1280px;margin:auto;padding:24px}
+h1,h2,p{margin-top:0}h1{font-size:2rem;margin-bottom:4px}h2{font-size:1.15rem}
+p{color:var(--muted)}
+button,input,select,textarea{font:inherit}button,input,select,textarea{border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:#fff;color:inherit}
+button{cursor:pointer}button:hover{border-color:#6484d3}button:disabled{opacity:.55;cursor:wait}.primary{color:#fff;background:var(--accent);border-color:var(--accent)}
+label{display:grid;gap:5px;margin-bottom:12px;color:var(--muted);font-size:.9rem}
+textarea{min-height:90px;resize:vertical}textarea,input{width:100%}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;min-width:0}
+.signin{max-width:440px;margin:10vh auto}.signin h1{margin-bottom:16px}
+.intro,.queue-head,.actions{display:flex;gap:8px;justify-content:space-between;align-items:center;flex-wrap:wrap}
+.layout{display:grid;grid-template-columns:minmax(260px,1fr) minmax(0,1.65fr);gap:16px;align-items:start}
+#create{margin-bottom:16px}.queue-head h2{margin:0}
+.ticket{width:100%;text-align:left;margin-top:8px;display:grid;gap:7px;overflow-wrap:anywhere}
+.ticket[aria-current=true]{border-color:var(--accent);background:#eef3ff}
+.tags{display:flex;gap:6px;flex-wrap:wrap}.tag{background:#edf1f6;color:#364760;border-radius:20px;padding:3px 8px;font-size:.78rem}
+.urgent,.overdue{background:#ffe4e3;color:#8e251d}.waiting,.private{background:#fff0cb;color:#6c4600}.resolved{background:#dff6e9;color:#21573b}
+.meta{color:var(--muted);font-size:.84rem}
+.detail h2{overflow-wrap:anywhere}.timeline{list-style:none;padding:0}.timeline li{padding:10px;margin-bottom:8px;border:1px solid var(--line);border-radius:9px;overflow-wrap:anywhere}
+.timeline p{margin:5px 0 0;white-space:pre-wrap;color:inherit}.actions{justify-content:flex-start;margin:10px 0}.actions label{margin:0}
+#feedback{padding:12px;background:#fff0cb;color:#6c4600;border-radius:8px}
+@media(max-width:720px){main{padding:14px}.layout{grid-template-columns:1fr}.mast{padding:12px 14px}}
+

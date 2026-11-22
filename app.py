@@ -6,7 +6,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import psycopg
-from flask import Flask, abort, g, jsonify, request
+from flask import Flask, abort, g, jsonify, request, send_from_directory
 from psycopg.rows import dict_row
 
 from business_calendar import BusinessCalendar, REPLY_TARGET, WORKWEEK
@@ -325,10 +325,22 @@ def apply_action(ticket_id, action):
         return jsonify(serialize(snapshot(conn, ticket_id), now))
 
 
+@app.get("/")
+def index():
+    return send_from_directory(ROOT, "frontdesk.html")
+
+
+@app.get("/web/<path:filename>")
+def web_asset(filename):
+    assets = {"app.js": "frontdesk.js", "style.css": "frontdesk.css"}
+    if filename not in assets:
+        abort(404)
+    return send_from_directory(ROOT, assets[filename])
+
+
 if __name__ == "__main__":
     from waitress import serve
 
     initialize()
     threading.Thread(target=worker, daemon=True).start()
     serve(app, host="0.0.0.0", port=int(os.getenv("PORT", "8000")))
-

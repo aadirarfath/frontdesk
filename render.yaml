@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: frontdesk
+    runtime: docker
+    region: singapore
+    plan: free
+    healthCheckPath: /health
+    autoDeployTrigger: "off"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTDESK_DB_SCHEMA
+        value: frontdesk
+      - key: FRONTDESK_ACCOUNTS
+        sync: false
+      - key: FRONTDESK_HOLIDAYS
+        sync: false

@@ -23,8 +23,11 @@ def call(key, path, payload=None):
 
 def verify_audit(database_url):
     import psycopg
+    from psycopg import sql
 
+    schema = sql.Identifier(os.getenv("FRONTDESK_DB_SCHEMA", "public"))
     with psycopg.connect(database_url) as connection:
+        connection.execute(sql.SQL("SET LOCAL search_path TO {}").format(schema))
         for command in (
             "UPDATE ticket_events SET body=NULL",
             "DELETE FROM ticket_events",

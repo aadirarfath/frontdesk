@@ -2,11 +2,13 @@ import hmac
 import json
 import os
 import threading
+from contextlib import contextmanager
 from datetime import date, timedelta
 from pathlib import Path
 
 import psycopg
 from flask import Flask, abort, g, jsonify, request, send_from_directory
+from psycopg import sql
 from psycopg.rows import dict_row
 
 from business_calendar import BusinessCalendar, REPLY_TARGET, WORKWEEK
@@ -17,17 +19,25 @@ ROOT = Path(__file__).resolve().parent
 CALENDAR = BusinessCalendar(
     date.fromisoformat(day) for day in os.getenv("FRONTDESK_HOLIDAYS", "").split(",") if day
 )
+DB_SCHEMA = os.getenv("FRONTDESK_DB_SCHEMA", "public")
 ACCOUNTS = json.loads(os.getenv("FRONTDESK_ACCOUNTS", "{}"))
 PUBLIC_EVENTS = ("created", "agent_reply", "customer_reply", "resolved", "reopened", "auto_closed")
 
 
+@contextmanager
 def db():
-    return psycopg.connect(os.environ["DATABASE_URL"], row_factory=dict_row)
+    with psycopg.connect(os.environ["DATABASE_URL"], row_factory=dict_row) as conn:
+        conn.execute(sql.SQL("SET LOCAL search_path TO {}").format(sql.Identifier(DB_SCHEMA)))
+        yield conn
 
 
 def initialize():
     with db() as conn:
         conn.execute("SELECT pg_advisory_xact_lock(4039127)")
+        if DB_SCHEMA != "public":
+            schema = sql.Identifier(DB_SCHEMA)
+            conn.execute(sql.SQL("CREATE SCHEMA IF NOT EXISTS {}").format(schema))
+            conn.execute(sql.SQL("REVOKE ALL ON SCHEMA {} FROM PUBLIC").format(schema))
         conn.execute((ROOT / "schema.sql").read_text(encoding="utf-8"))
 
 
@@ -220,8 +230,6 @@ def detail(ticket_id):
 
 
 def change(conn, ticket_id, **fields):
-    from psycopg import sql
-
     assignments = sql.SQL(", ").join(
         sql.SQL("{}={}").format(sql.Identifier(name), sql.Placeholder()) for name in fields
     )

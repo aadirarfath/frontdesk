@@ -18,6 +18,17 @@ python app.py
 
 4. Open http://localhost:8000. Use `local-customer-one` to create a ticket and `local-meera` to claim it. Open a separate browser window for another identity. Use `GET /health` to check the database connection and schema.
 
+## Deploy on Render with Supabase PostgreSQL
+
+1. Create a Supabase project for Frontdesk. In the project's **Connect** panel, choose **Session pooler** and copy the connection string. Substitute the database password, URI-encode any reserved characters in it, and add `sslmode=require` to the query parameters.
+2. In Render, create a Blueprint from the GitHub branch containing `render.yaml`. It provisions the Docker web service. Set `DATABASE_URL` in Render to the Supabase connection string. The app initializes its schema on startup using the database connection role. That role needs permission to create the `frontdesk` schema and own its tables.
+3. Keep the `frontdesk` schema outside Supabase's exposed Data API schemas. The Render Blueprint selects it with `FRONTDESK_DB_SCHEMA`. The local Docker Compose setup uses `public` by default and can continue using its existing data.
+4. Set `FRONTDESK_ACCOUNTS` to a JSON object with distinct, randomly generated access keys for each demo identity. Set `FRONTDESK_HOLIDAYS` to a comma-separated list of company holidays. Store the connection string and keys in Render's environment settings.
+5. Open the deployed URL and check `/health`. Use separate agent and customer keys to test claiming a ticket and verify that a private note only appears in the agent view. Record the live URL in the submission note and keep both services provisioned throughout the review week.
+
+[Supabase PostgreSQL connection guide](https://supabase.com/docs/guides/database/connecting-to-postgres)
+
+
 ## SLA decisions
 
 - Arvo's calendar is Asia/Kolkata, 09:30–18:30 Monday through Friday. Set `FRONTDESK_HOLIDAYS` to comma-separated ISO dates for company holidays in the deployment period.

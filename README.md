@@ -2,6 +2,19 @@
 
 Frontdesk is a support queue for Arvo Systems. Agents claim tickets, send public replies, request customer information, take private notes, and review the audit history. Customers can open their own tickets and see their public conversations.
 
+## Live demo
+
+[Open Frontdesk](https://frontdesk-lpxy.onrender.com/) using the demo access keys shared separately. The customer and agent views both show these sample tickets:
+
+| Ticket | Priority | Subject |
+| --- | --- | --- |
+| #2 | Urgent | Demo: Billing approval is blocked |
+| #3 | Medium | Demo: CSV export columns are missing |
+| #4 | Low | Demo: How do I invite a teammate? |
+
+[Completion note](SUBMISSION.md)
+
+
 ## Run locally
 
 Requirements are Python 3.11 or later, and PostgreSQL 16 or Docker Compose.
